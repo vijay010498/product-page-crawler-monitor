@@ -13,22 +13,22 @@ const CrawlResultTableComponent = ({ results }) => {
     {
       title: 'Result Id',
       dataIndex: 'result_id',
-      key: 'result_id',
+      key: 'job_id',
     },
     {
       title: 'Product Title',
       dataIndex: 'title',
-      key: 'result_id',
+      key: 'job_id',
     },
     {
       title: 'Product Brand',
       dataIndex: 'brand',
-      key: 'result_id',
+      key: 'job_id',
     },
     {
       title: 'Product Image',
       dataIndex: 'image_url',
-      key: 'result_id',
+      key: 'job_id',
       render: (_, { image_url, title}) => {
         return (
           <Link href={image_url} title={title} target={"_blank"}/>
@@ -36,7 +36,7 @@ const CrawlResultTableComponent = ({ results }) => {
       }
     },
   ];
-  return <Table dataSource={results} columns={columns} pagination={{position: ['topLeft', 'bottomRight'],}} size={"middle"} sticky={true} scroll={{ y: 300, x: '100vw' }} />;
+  return <Table dataSource={results} columns={columns} pagination={{position: ['topLeft', 'bottomRight'],}} size={"middle"} sticky={true} scroll={{ y: 300, x: '100vw' }} rowKey={'job_id'}/>;
 }
 
 export default CrawlResultTableComponent;
