@@ -36,7 +36,7 @@ const CrawlResultTableComponent = ({ results }) => {
       }
     },
   ];
-  return <Table dataSource={results} columns={columns} pagination={{position: ['topLeft', 'bottomRight'],}} size={"middle"} sticky={true} scroll={{ y: 300, x: '100vw' }} rowKey={'job_id'}/>;
+  return <Table dataSource={results} columns={columns} pagination={{position: ['topLeft', 'bottomRight'],}} size={"middle"} sticky={true} scroll={{ y: 300, x: '100vw' }}/>;
 }
 
 export default CrawlResultTableComponent;
