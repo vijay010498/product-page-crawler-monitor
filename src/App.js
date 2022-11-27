@@ -16,30 +16,25 @@ const App = () => {
     });
     const [crawlResults, setCrawlResults] = useState([]);
 
-    console.log('render, App.js', queueJobs);
-
     const getQueueStatus = () => Object.values(QueueStatus);
 
     const getQueueStatusCalls = (QueueStatues = []) => QueueStatues.map((status) => {
-        const getQueueByStatusAPI = `http://crawling-queue-service:5000/jobs/${status}`;
+        const getQueueByStatusAPI = `http://localhost:5000/jobs/${status}`;
         return axios.get(getQueueByStatusAPI);
     });
 
     const fetchQueueJobs = async () => {
-        console.log('jobs-api-call')
         const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
         const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
         setQueueJobs(jobs);
     }
 
     const fetchCrawlResults = async () => {
-        console.log('results-api-call')
-        const { data : { results }  } = await axios.get('http://crawling-queue-service:5000/results');
+        const { data : { results }  } = await axios.get('http://localhost:5000/results');
         setCrawlResults(results);
     }
 
     useEffect(() => {
-        console.log('use-effect');
         fetchQueueJobs();
         fetchCrawlResults();
 
@@ -58,8 +53,7 @@ const App = () => {
     }, []);
 
     const randomJobsEnqueueClickHandler = async () => {
-        console.log('Random API');
-        await axios.get('http://crawling-queue-service:5000/random/enqueued');
+        await axios.get('http://localhost:5000/random/enqueued');
         return fetchQueueJobs();
     }
 
