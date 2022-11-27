@@ -1,25 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
+import CrawlQueueChartComponent from "./components/crawl-queue-chart/crawl-queue-chart.component";
+import {useState, useEffect} from "react";
+import axios from "axios";
+import QueueStatus from "./constants/queue-status";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const [queueJobs, setQueueJobs] = useState({
+        enqueuedJobs: [],
+        in_progressJobs: [],
+        completedJobs: [],
+        failedJobs: []
+    });
+    console.log('render', queueJobs);
+
+    const getQueueStatus = () => Object.values(QueueStatus);
+
+    const getQueueStatusCalls = (QueueStatues = []) => QueueStatues.map((status) => {
+        const getQueueByStatusAPI = `http://localhost:5000/jobs/${status}`;
+        return axios.get(getQueueByStatusAPI);
+    });
+
+    useEffect(() => {
+        const fetchQueueJobs = async () => {
+            console.log('Jobs API Called');
+            const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
+            const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
+           setQueueJobs(jobs);
+        }
+        fetchQueueJobs();
+    }, []);
+
+    return (
+        <div className="App">
+            <h1>Live Crawl Queue</h1>
+            <div className='queue-overview-chart'>
+                <CrawlQueueChartComponent enqueuedJobs={queueJobs.enqueuedJobs}
+                                          in_progressJobs={queueJobs.in_progressJobs}
+                                          completedJobs={queueJobs.completedJobs}
+                                          failedJobs={queueJobs.failedJobs}/>
+            </div>
+        </div>
+    );
 }
 
 export default App;
