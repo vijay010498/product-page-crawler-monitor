@@ -22,12 +22,24 @@ const App = () => {
 
     useEffect(() => {
         const fetchQueueJobs = async () => {
-            console.log('Jobs API Called');
+            console.log('Jobs API Called inside userEffect []');
             const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
             const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
-           setQueueJobs(jobs);
+            setQueueJobs(jobs);
         }
         fetchQueueJobs();
+        const fetchQueueJobsInterval = setInterval(() => {
+            const fetchQueueJobs = async () => {
+                console.log('Jobs API Called inside interval');
+                const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
+                const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
+                setQueueJobs(jobs);
+            }
+            fetchQueueJobs();
+        }, 3000);
+        return () => {
+            clearInterval(fetchQueueJobsInterval);
+        }
     }, []);
 
     return (
