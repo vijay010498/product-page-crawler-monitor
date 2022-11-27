@@ -20,31 +20,36 @@ const App = () => {
         return axios.get(getQueueByStatusAPI);
     });
 
+    const fetchQueueJobs = async () => {
+        const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
+        const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
+        setQueueJobs(jobs);
+    }
+
     useEffect(() => {
-        const fetchQueueJobs = async () => {
-            console.log('Jobs API Called inside userEffect []');
-            const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
-            const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
-            setQueueJobs(jobs);
-        }
         fetchQueueJobs();
         const fetchQueueJobsInterval = setInterval(() => {
-            const fetchQueueJobs = async () => {
-                console.log('Jobs API Called inside interval');
-                const [{data: {jobs: enqueuedJobs}}, {data: {jobs: in_progressJobs}}, {data: {jobs: completedJobs}}, {data: {jobs: failedJobs}}] = await Promise.all(getQueueStatusCalls(getQueueStatus()));
-                const jobs = {enqueuedJobs, in_progressJobs, completedJobs, failedJobs};
-                setQueueJobs(jobs);
-            }
             fetchQueueJobs();
-        }, 3000);
+        }, 1500);
         return () => {
             clearInterval(fetchQueueJobsInterval);
         }
     }, []);
 
+    const randomJobsEnqueueClickHandler = async () => {
+        console.log('Random API');
+        await axios.get('http://localhost:5000/random/enqueued');
+        return fetchQueueJobs();
+    }
+
     return (
         <div className="App">
             <h1>Live Crawl Queue</h1>
+            <button
+                className='random-enqueuedJobs-button'
+                onClick={randomJobsEnqueueClickHandler}>
+                Enqueue Random Jobs
+            </button>
             <div className='queue-overview-chart'>
                 <CrawlQueueChartComponent enqueuedJobs={queueJobs.enqueuedJobs}
                                           in_progressJobs={queueJobs.in_progressJobs}

@@ -40,3 +40,8 @@
 .queue-overview-chart {
   margin: 45px;
 }
+
+.random-enqueuedJobs-button {
+  margin-left: 45px;
+  align-items: initial;
+}
