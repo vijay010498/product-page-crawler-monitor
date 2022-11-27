@@ -21,7 +21,7 @@ const App = () => {
     const getQueueStatus = () => Object.values(QueueStatus);
 
     const getQueueStatusCalls = (QueueStatues = []) => QueueStatues.map((status) => {
-        const getQueueByStatusAPI = `http://localhost:5000/jobs/${status}`;
+        const getQueueByStatusAPI = `http://crawling-queue-service:5000/jobs/${status}`;
         return axios.get(getQueueByStatusAPI);
     });
 
@@ -34,7 +34,7 @@ const App = () => {
 
     const fetchCrawlResults = async () => {
         console.log('results-api-call')
-        const { data : { results }  } = await axios.get('http://localhost:5000/results');
+        const { data : { results }  } = await axios.get('http://crawling-queue-service:5000/results');
         setCrawlResults(results);
     }
 
@@ -59,7 +59,7 @@ const App = () => {
 
     const randomJobsEnqueueClickHandler = async () => {
         console.log('Random API');
-        await axios.get('http://localhost:5000/random/enqueued');
+        await axios.get('http://crawling-queue-service:5000/random/enqueued');
         return fetchQueueJobs();
     }
 
