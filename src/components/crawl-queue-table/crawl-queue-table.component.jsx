@@ -45,7 +45,6 @@ const CrawlQueueTableComponent = ({queueJobs}) => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'job_id',
-      sorter: (a, b) => new Date(b.date) - new Date(a.date),
       render: (_, {created_at, status}) => {
         const date = DateTime.fromISO(created_at);
         const color = getStatusColor(status);
