@@ -59,7 +59,6 @@ const CrawlQueueTableComponent = ({queueJobs}) => {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'job_id',
-      sorter: (a, b) => new Date(b.date) - new Date(a.date),
       render: (_, {updated_at, status}) => {
         const date = DateTime.fromISO(updated_at);
         const color = getStatusColor(status);
@@ -74,7 +73,6 @@ const CrawlQueueTableComponent = ({queueJobs}) => {
       title: 'Lock Status',
       dataIndex: 'locked',
       key: 'job_id',
-      sorter: (a, b) => new Date(b.date) - new Date(a.date),
       render: (_, {locked}) => {
         const color = locked ? 'red' : 'green'
         const displayText = locked ? 'LOCKED' : 'FREE'
